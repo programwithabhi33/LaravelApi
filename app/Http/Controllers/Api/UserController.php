@@ -16,7 +16,22 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        echo "user index method";
+        $users = User::all();
+        if(count($users) > 0){
+            // at least 1 user in the database 
+            $response = [
+                'status' => true,
+                'data' => $users,
+            ];
+        }
+        else{
+            // No user found in the database 
+            $response = [
+                'status' => false,
+                'message' => "No users found",
+            ];
+        }
+        return response()->json($response,200);
     }
 
     /**
