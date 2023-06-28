@@ -14,9 +14,22 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index($flag)
     {
-        $users = User::all();
+        // flag 1 => Active Users , 0 => All users
+        $query = User::select("name","email");
+        if($flag == 1){
+            $query->where("status",1);
+        }
+        else if($flag == 0){
+            // empty condition 
+        }
+        else{
+            return response()->json([
+                'message' => "Unknown parameter passed, it can be 1 or 0",
+            ],400);
+        }
+        $users = $query->get();
         if(count($users) > 0){
             // at least 1 user in the database 
             $response = [
@@ -88,7 +101,20 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::find($id);
+        if(is_null($user)){
+            $response = [
+                'status' => false,
+                'message' => "No user found",
+            ];
+        }
+        else{
+            $response = [
+                'status' => true,
+                'data' => $user,
+            ];
+        }
+        return response()->json($response,200);
     }
 
     /**

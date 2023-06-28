@@ -19,11 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/users/get",[UserController::class,"index"]);
+Route::get("/users/get/{flag}",[UserController::class,"index"]);
 
-Route::delete("/user/{id}",function($id){
-    return response("delete method".$id,200);
-});
+Route::get("/user/get/{id}",[UserController::class,"show"]);
+
 Route::put("/user/{id}",function($id){
     return response("put method".$id,200);
 });
