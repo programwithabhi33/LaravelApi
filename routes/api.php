@@ -23,8 +23,6 @@ Route::get("/users/get/{flag}",[UserController::class,"index"]);
 
 Route::get("/user/get/{id}",[UserController::class,"show"]);
 
-Route::put("/user/{id}",function($id){
-    return response("put method".$id,200);
-});
+Route::delete("/user/delete/{id}",[UserController::class,"destroy"]);
 
 Route::post("/user/create",[UserController::class,"create"]);

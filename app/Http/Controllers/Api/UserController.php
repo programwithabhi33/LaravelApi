@@ -138,6 +138,35 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::find($id);
+        if(is_null($user)){
+            // user not found 
+            $response = [
+                'status' => false,
+                'message' => "User with this id not found",
+            ];
+            $responseCode = 404;
+        }
+        else{
+            // User found with this id
+            DB::beginTransaction();
+            try{
+                $user->delete();
+                DB::commit();
+                $response = [
+                    'status' => true,
+                    'message' => "User deleted successfully",
+                ];
+                $responseCode = 200;
+            }catch(\Exeception $error){
+                DB::rollback();
+                $response = [
+                    'status' => true,
+                    'message' => "Inter server error",
+                ];
+                $responseCode = 500;
+            }
+        }
+        return response()->json($response,$responseCode);
     }
 }
