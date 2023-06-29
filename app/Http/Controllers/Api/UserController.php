@@ -47,9 +47,7 @@ class UserController extends Controller
         return response()->json($response,200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+   
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(),[
@@ -88,13 +86,6 @@ class UserController extends Controller
         
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -117,20 +108,39 @@ class UserController extends Controller
         return response()->json($response,200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::find($id);
+        if(is_null($user)){
+            return response()->json([
+                'status' => false,
+                'message' => "User with this id does not exist"
+            ],404);
+        }
+        else{
+            DB::beginTransaction();
+            try{
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->save();
+                DB::commit();
+            }
+            catch(\Exeception $error){
+                DB::rollback();
+                return response()->json([
+                    'status' => false,
+                    'message' => "Internal server error"
+                ],500);
+            }
+        }
+        return response()->json([
+            'status' => true,
+            'message' => "User details updates successfully",
+        ]);
     }
 
     /**

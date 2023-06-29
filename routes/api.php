@@ -26,3 +26,5 @@ Route::get("/user/get/{id}",[UserController::class,"show"]);
 Route::delete("/user/delete/{id}",[UserController::class,"destroy"]);
 
 Route::post("/user/create",[UserController::class,"create"]);
+
+Route::put("/user/update/{id}",[UserController::class,"update"]);
