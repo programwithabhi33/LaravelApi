@@ -28,3 +28,5 @@ Route::delete("/user/delete/{id}",[UserController::class,"destroy"]);
 Route::post("/user/create",[UserController::class,"create"]);
 
 Route::put("/user/update/{id}",[UserController::class,"update"]);
+
+Route::patch("/change-password/{id}",[UserController::class,"changePassword"]);
