@@ -179,4 +179,49 @@ class UserController extends Controller
         }
         return response()->json($response,$responseCode);
     }
+
+    public function changePassword(Request $request, string $id) {
+        $user = User::find($id);
+        if(is_null($user)){
+            return response()->json([
+                'status' => false,
+                'message' => "User with this id does not exist"
+            ],404);
+        }
+        else{
+            if(($request->new_password) == ($request->confirm_password)){
+                if(!Hash::check($request->old_password, $user->password)){
+                    return response()->json([
+                        'status' => false,
+                        'message' => "The old password is not correct",
+                    ],400);
+                }
+                else{
+                    DB::beginTransaction();
+                    try{
+                        $user->password = Hash::make($request->new_password);
+                        $user->save();
+                        DB::commit();
+                    }
+                    catch(\Exception $error){
+                        DB::rollback();
+                        return response()->json([
+                            'status' => false,
+                            'message' => "Internal server error",
+                        ],500);
+                    }
+                }
+            }
+            else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "New password and confirm password should be same",
+                ],400);
+            }
+        }
+        return response()->json([
+            'status' => true,
+            'message' => "User password changed successfully",
+        ]);
+    }
 }
