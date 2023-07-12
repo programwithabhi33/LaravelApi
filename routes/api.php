@@ -30,3 +30,5 @@ Route::post("/user/create",[UserController::class,"create"]);
 Route::put("/user/update/{id}",[UserController::class,"update"]);
 
 Route::patch("/change-password/{id}",[UserController::class,"changePassword"]);
+
+Route::post("/register",[UserController::class,"register"]);

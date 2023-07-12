@@ -224,4 +224,28 @@ class UserController extends Controller
             'message' => "User password changed successfully",
         ]);
     }
+
+    public function register(Request $request){
+
+        // When register user apply the validation's
+        $validatedData = $request->validate([
+            "name" => "required",
+            "email" => ["required","email","unique:users,email"],
+            "password" => ["required","min:8","confirmed"]
+        ]);
+
+        // Finally create user with the validatedData
+        $user = User::create($validatedData);
+
+        // Creating user token 
+        $token = $user->createToken("auth_token")->accessToken;
+
+        return response()->json([
+            "status" => true,
+            "token" => $token,
+            "user_details" => $user,
+            "message" => "User created successfully"
+        ]);
+
+    }
 }
